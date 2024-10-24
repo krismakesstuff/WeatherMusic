@@ -1,21 +1,45 @@
 :root {
     --primary-color: #3498db;
-    --secondary-color: #2ecc71;
+    --secondary-color: #148543;
     --background-color: #2c3e50;
-    --text-color: #ecf0f1;
+    --text-color: #aebbbe;
 }
 
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     color: var(--text-color);
     background-color: var(--background-color);
+    padding: 10px;
 }
 
 #weatherInfo {
-    background-color: var(--background-color);
-    padding: 20px;
-    border-radius: 8px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
     color: var(--text-color);
+
+    display: flex;
+    justify-content: space-around;
+
+    text-align: center;
+}
+
+[id^="variable-"] {
+    background-color: var(--secondary-color);
+    margin: 5px;
+}
+
+#weatherInfo h3 {
+    margin: 0;
+    padding: 10px;
+    color: var(--background-color);
+    font-size: 1.45em;
+}
+
+#weatherInfo p {
+    margin: 0;
+    padding: 10px;
+    color: var(--background-color);
+    font-size: 1.5em;
 }
 
 #map {

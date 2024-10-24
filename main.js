@@ -1,8 +1,7 @@
-import { MapsAPIKey } from "./credentials.js";
+//import { MapsAPIKey } from "./credentials.js";
 // import { Loader } from 'google.maps.plugins.loader.Loader';
 
-let openMeteoVariables = '&current=temperature_2m,relative_humidity_2m,is_day,rain,wind_speed_10m';
-
+let openMeteoVariables = ['&current=temperature_2m', 'relative_humidity_2m', 'is_day', 'rain', 'showers', 'snowfall', 'surface_pressure', 'wind_speed_10m', 'wind_direction_10m'];
 
 let map;
 
@@ -11,6 +10,7 @@ let userLongitude;
 
 const defaultZoom = 4;
 
+// not using
 async function loadMapsAPILibrary() {
     // Load the Google Maps JavaScript API library.
     const loader = new Loader({
@@ -21,6 +21,7 @@ async function loadMapsAPILibrary() {
     loader.importLibrary("maps")
 }
 
+// not using
 async function initMap() {
 
     if(userLatitude && userLongitude) {
@@ -72,6 +73,7 @@ async function initMap() {
     }
 }
 
+// not using
 async function updateMap(latitude, longitude) {
     // The location of Uluru
     const position = { lat: latitude, lng: longitude};
@@ -95,39 +97,43 @@ async function updateMap(latitude, longitude) {
     });
 }
 
-
+// updates HTML from API response
 async function fetchWeather(lat, long) {
     console.log('fetching weather for: ' + lat + ', ' + long);
 
     let latitude = 'latitude=' + lat;
-    let longitude = 'longitude=' + long;
+    let longitude = '&longitude=' + long;
 
-    let openMeteoAPI = 'https://api.open-meteo.com/v1/forecast?' + latitude + '&' + longitude + openMeteoVariables;
+    let openMeteoAPI = 'https://api.open-meteo.com/v1/forecast?' + latitude + longitude + openMeteoVariables.join(',');
 
     fetch(openMeteoAPI)
       .then(response => response.json())
       .then(data => {
         console.log(data)
+        // get the weather info from the response
         const currentTemp = data.current.temperature_2m;
+        const tempUnit = data.current_units.temperature_2m;
         const currentRain = data.current.rain;
+        const rainUnit = data.current_units.rain;
         const currentHumidity = data.current.relative_humidity_2m;
+        const humidityUnit = data.current_units.relative_humidity_2m; 
         const currentWindSpeed = data.current.wind_speed_10m;  
-        
-        // update the weather info elements     
-        const rain = document.getElementById('rain');
-        const temperature = document.getElementById('temperature');
-        const location = document.getElementById('location');
-        const humidity = document.getElementById('humidity');
-        const windSpeed = document.getElementById('windSpeed');
-        const dayornight = document.getElementById('dayornight');
+        const windSpeedUnit = data.current_units.wind_speed_10m;
+        const currentWindDirection = data.current.wind_direction_10m;
+        const windDirectionUnit = data.current_units.wind_direction_10m;
+        const currentSurfacePressure = data.current.surface_pressure;
+        const surfacePressureUnit = data.current_units.surface_pressure;
 
-        rain.textContent = `Rain: ${currentRain}mm`;
-        temperature.textContent = `Temperature: ${currentTemp}°C`;
-        humidity.textContent = `Humidity: ${currentHumidity}%`;
-        windSpeed.textContent = `Wind Speed: ${currentWindSpeed}km/h`;
-        location.textContent = `Location: ${data.latitude}, ${data.longitude}`;
-        dayornight.textContent = `Day or Night: ${data.current.is_day ? dayornight.textContent = 'Day' : 'Night'}`;    
+        // update the HTML 
+        document.getElementById('&current=temperature_2m').textContent = currentTemp + ' ' + tempUnit;
+        document.getElementById('rain').textContent = currentRain + ' ' + rainUnit;
+        document.getElementById('relative_humidity_2m').textContent = currentHumidity + ' ' + humidityUnit;
+        document.getElementById('wind_speed_10m').textContent = currentWindSpeed + ' ' + windSpeedUnit;
+        document.getElementById('wind_direction_10m').textContent = currentWindDirection + ' ' + windDirectionUnit;
+        document.getElementById('surface_pressure').textContent = currentSurfacePressure + ' ' + surfacePressureUnit;
 
+        // update the location input 
+        document.getElementById('locationInput').value = lat + ', ' + long;
       });
 }
 
@@ -166,25 +172,34 @@ function addButtonListeners() {
     locationButton.addEventListener('click', getUserLocationAndFetch);
 }
 
-function setDefaultWeatherInfo() {
-    const rain = document.getElementById('rain');
-    const temperature = document.getElementById('temperature');
-    const location = document.getElementById('location');
-    const humidity = document.getElementById('humidity');
-    const windSpeed = document.getElementById('windSpeed');
+function makeWeatherInfoDivs() {
 
+    // get the weather info div
+    let weatherInfo = document.getElementById('weatherInfo');
 
-    rain.textContent = 'Rain: Choose a location';
-    temperature.textContent = 'Temperature: ' + 'Choose a location';
-    location.textContent = 'Location: ' + 'Choose a location';
-    humidity.textContent = 'Humidity: ' + 'Choose a location';
-    windSpeed.textContent = 'Wind Speed: ' + 'Choose a location';
+    // make divs with a title and p tag for each of the openMeteoVariables
+    openMeteoVariables.forEach((variable) => {
+        let div = document.createElement('div');
+        div.id = 'variable-' + variable;
+        let title = document.createElement('h3');
+        title.textContent = variable;
+        let p = document.createElement('p');
+        p.id = variable;
+
+        div.appendChild(title);
+        div.appendChild(p);
+
+        weatherInfo.appendChild(div);
+    });
+
+    
+    
 }
 
 // main
 try {
 
-    setDefaultWeatherInfo();
+    makeWeatherInfoDivs();
     addButtonListeners();
 
     //getUserLocationAndFetch()
