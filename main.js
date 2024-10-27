@@ -29,7 +29,7 @@ async function setupRNBO() {
 }
 
 
-let openMeteoVariables = ['&hourly=','temperature_2m','dew_point_2m','precipitation_probability','precipitation','rain','snowfall','snow_depth','pressure_msl','surface_pressure','cloud_cover','wind_speed_10m','temperature_80m', 'wind_direction_10m','&forecast_days=1'];
+let openMeteoVariables = ['&hourly=','temperature_2m','temperature_80m','dew_point_2m','precipitation_probability','precipitation','rain','snowfall','snow_depth','pressure_msl','surface_pressure','cloud_cover','wind_speed_10m', 'wind_direction_10m','&forecast_days=1'];
 
 let map;
 
@@ -172,17 +172,20 @@ async function fetchWeather(lat, long) {
                 
             // get the current time
             let currentTime = new Date();
-            //let currentHour = currentTime.getHours() - 1;
-            let currentHour = 0;
+            let currentHour = currentTime.getHours() - 1;
+            //let currentHour = 0;
             console.log("Current Hour: " + currentHour);
+
             openMeteoVariables.forEach((variable) => {
-                if(variable.includes('&')){
-                    return;
-                }
+                    if(variable.includes('&')){
+                        return;
+                    }
                     // get the data from the response
                     let variableName = variable;
                     let variableValue = data.hourly[variableName][currentHour];
                     let variableUnit = data.hourly_units[variableName];
+                    console.log('Updating: ' + variableName + ' : ' + variableValue + ' ' + variableUnit);
+
                     // update the HTML
                     document.getElementById(variableName).textContent = variableValue + ' ' + variableUnit;
                     // update RNBO parameters
