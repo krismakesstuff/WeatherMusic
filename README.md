@@ -26,7 +26,7 @@ This project is a work in progress.
 - finish building rnbo patch
 - Connnect weather data to rnbo patch
 - add geocoding to add search by name of location functioanlity [geocoding api](https://open-meteo.com/en/docs/geocoding-api)
-- fix google maps integration 
+- fix google maps integration (look at alternatives [Nasa Whirlwind](https://worldwind.arc.nasa.gov/web/get-started/), [OpenStreetMap](https://wiki.openstreetmap.org/wiki/Use_OpenStreetMap))
 - Add auto-refresh (by minute? or hour? or day?) Open-Meteo has a limit of 10,000 calls per day.
 
 ## Data Mapping
@@ -46,7 +46,7 @@ The weather data is mapped to RNBO parameters. Inside RNBO are mutliple patches 
 
 | Weather Variables |  RNBO Parameters |
 |-------------------|----------------|
-| Rain amount (mm/hr)| RainSynth<br>- Trigger Rate<br>- Frequency<br>- ADSR<br>- Note Length(ms)<br>- OutputGain
+| Rain amount (mm/hr)| RainSynth<br>- Trigger Rate<br>- Frequency<br>- ADSR<br>- Note Length(ms)<br>- OutputGain<br>- Noise Gain
 | Wind Speed (km/h) | tbd
 | Wind Direction (deg)| tbd
 | Temperature (C)  | tbd 
@@ -59,6 +59,7 @@ The weather data is mapped to RNBO parameters. Inside RNBO are mutliple patches 
 
 | Max Patches | Description
 |-------------|------------|
-| RainSynth   | 2 voice sine wave synth arpeggiator. Each clock cycle triggers the following:<br>- Randomly chooses frequency multiplier of each osc.<br>- Randomly delays ADSR note on.<br>- Randomly chooses to trigger the left or right osc.
+| RainSynth   | 4 OSCs: 2 sine, 2 saw, each channel has dedicated saw and sine OSCs. There is noise stage that is applied to both channels equally. After that, a delay and filter. Each "clock input" triggers random numbers for the following parameters:<br>- frequency multiplier for each channel's OSCs.<br>- delay time for ADSR note on.<br>-  left or right channel to trigger note on.
 | HeatSynth  | Need to build. Could be for temperature, humidity, maybe pressure as well? 
 | WindSynth  | Need to build. Would be for windspeed, and winddirection.
+| EarthTone | Single sine wave at 64hz. 

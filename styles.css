@@ -16,11 +16,13 @@ body {
     background-color: var(--primary-color);
     border-radius: 2px;
     color: var(--text-color);
-
+    
     display: flex;
-    justify-content: space-around;
-
+    justify-content: flex-start;
     text-align: center;
+    align-items: stretch;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 [id^="variable-"] {
