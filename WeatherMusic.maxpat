@@ -14906,7 +14906,7 @@
 										}
 ,
 										"classnamespace" : "rnbo",
-										"rect" : [ 558.0, 128.0, 1158.0, 833.0 ],
+										"rect" : [ 558.0, 128.0, 679.0, 833.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -14942,14 +14942,14 @@
 													"numinlets" : 3,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 552.0, 209.0, 40.0, 23.0 ],
+													"patching_rect" : [ 468.0, 215.0, 40.0, 23.0 ],
 													"rnbo_classname" : "drunk",
 													"rnbo_extra_attributes" : 													{
 														"intmode" : 0,
 														"skipzero" : 0
 													}
 ,
-													"rnbo_serial" : 1,
+													"rnbo_serial" : 2,
 													"rnbo_uniqueid" : "drunk_obj-41",
 													"text" : "drunk"
 												}
@@ -14961,7 +14961,7 @@
 													"maxclass" : "comment",
 													"numinlets" : 1,
 													"numoutlets" : 0,
-													"patching_rect" : [ 396.0, 196.0, 62.0, 21.0 ],
+													"patching_rect" : [ 395.5, 180.0, 62.0, 21.0 ],
 													"text" : "mod freq"
 												}
 
@@ -15011,10 +15011,10 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "signal" ],
 													"patching_rect" : [ 300.0, 302.0, 29.5, 23.0 ],
-													"rnbo_classname" : "*~",
-													"rnbo_serial" : 4,
-													"rnbo_uniqueid" : "*~_obj-33",
-													"text" : "*~"
+													"rnbo_classname" : "+~",
+													"rnbo_serial" : 1,
+													"rnbo_uniqueid" : "+~_obj-33",
+													"text" : "+~"
 												}
 
 											}
@@ -15030,7 +15030,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"outlettype" : [ "signal", "float" ],
-													"patching_rect" : [ 337.5, 196.0, 56.0, 23.0 ],
+													"patching_rect" : [ 337.5, 179.0, 56.0, 23.0 ],
 													"rnbo_classname" : "number~",
 													"rnbo_extra_attributes" : 													{
 														"interval" : 100.0,
@@ -15040,7 +15040,7 @@
 ,
 													"rnbo_serial" : 29,
 													"rnbo_uniqueid" : "number~_obj-30",
-													"sig" : 0.25
+													"sig" : 1.0
 												}
 
 											}
@@ -15051,7 +15051,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 337.5, 164.0, 29.5, 23.0 ],
+													"patching_rect" : [ 337.5, 147.0, 29.5, 23.0 ],
 													"rnbo_classname" : "message",
 													"rnbo_extra_attributes" : 													{
 														"text" : ""
@@ -15070,7 +15070,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"outlettype" : [ "signal", "signal" ],
-													"patching_rect" : [ 337.5, 228.0, 42.0, 23.0 ],
+													"patching_rect" : [ 337.5, 243.0, 42.0, 23.0 ],
 													"rnbo_classname" : "cycle~",
 													"rnbo_extra_attributes" : 													{
 														"buffername" : "RNBODefaultSinus",
@@ -69155,7 +69155,7 @@
 							}
 ,
 							"rnbo-toggleclock" : 							{
-								"value" : 1.0
+								"value" : 0.0
 							}
 ,
 							"rnbo-dew_point_2m" : 							{
@@ -69425,7 +69425,7 @@
 										}
 ,
 										"rnbo-toggleclock" : 										{
-											"value" : 1.0
+											"value" : 0.0
 										}
 ,
 										"rnbo-dew_point_2m" : 										{
