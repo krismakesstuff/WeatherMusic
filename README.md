@@ -14,7 +14,9 @@ For more information  visit [open-meteo](https://open-meteo.com/). The data is s
 3. Listen to the sounds generated from the weather data.
 
 ## How to Build
-WIP
+WIP.
+
+The project is React App built with Vite. 
 
 
 ## Note

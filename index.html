@@ -1,26 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Music</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Weather Music</h1>
-    <h3>Listen to music derived from the current weather. Use your location, or search for any location.</h3>
-    <div>
-        <input type="text" id="locationInput" placeholder="Latitude, Longitude">
-        <button id="fetchWeatherBtn" >Fetch Weather</button>
-        <button id="currentLocationBtn" >Use Current Location</button>
-    </div>
-    <h2>Weather Info</h2>
-    <div id="weatherInfo">
-    </div>
-    <div id="rnbo-device">
-    </div>
-    <div id="map"></div>
-    <script type="module" src="rnbo-helpers.js"></script>
-    <script type="module" src="main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generative Weather Music</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="map" style="height: 500px;"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
