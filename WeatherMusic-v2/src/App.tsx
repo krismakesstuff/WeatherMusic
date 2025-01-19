@@ -31,7 +31,8 @@ import './App.css'
 // });
 
 // setupRNBO();
-import { map, latLng, tileLayer, MapOptions } from "leaflet";
+
+import { map, latLng, tileLayer, MapOptions, imageOverlay, latLngBounds } from "leaflet";
 import 'leaflet/dist/leaflet.css';
 
 
@@ -48,6 +49,17 @@ tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(mymap);
 
+const imageUrl = '/898.jpg';
+const errorOverlayUrl = 'https://cdn-icons-png.flaticon.com/512/110/110686.png';
+const altText = 'Image of Newark, N.J. in 1922. Source: The University of Texas at Austin, UT Libraries Map Collection.';
+const bounds = latLngBounds([[40.799311, -74.118464], [40.68202047785919, -74.33]]);
+
+imageOverlay(imageUrl, bounds, {
+    opacity: 0.8,
+    errorOverlayUrl: errorOverlayUrl,
+    alt: altText,
+    interactive: true
+}).addTo(mymap);
 
 function App() {
 
@@ -75,8 +87,6 @@ function App() {
     <div id="weatherInfo">
     </div>
     <div id="rnbo-device">
-    </div>
-    <div id="map" className="h-svh">
     </div>
     </>
   )
