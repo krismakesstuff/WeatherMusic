@@ -99,7 +99,7 @@ async function initMap() {
             title: "Uluru",
         });
     }
-}
+}  
 
 // not using
 async function updateMap(latitude, longitude) {
@@ -172,20 +172,17 @@ async function fetchWeather(lat, long) {
                 
             // get the current time
             let currentTime = new Date();
-            let currentHour = currentTime.getHours() - 1;
-            //let currentHour = 0;
+            //let currentHour = currentTime.getHours() - 1;
+            let currentHour = 0;
             console.log("Current Hour: " + currentHour);
-
             openMeteoVariables.forEach((variable) => {
-                    if(variable.includes('&')){
-                        return;
-                    }
+                if(variable.includes('&')){
+                    return;
+                }
                     // get the data from the response
                     let variableName = variable;
                     let variableValue = data.hourly[variableName][currentHour];
                     let variableUnit = data.hourly_units[variableName];
-                    console.log('Updating: ' + variableName + ' : ' + variableValue + ' ' + variableUnit);
-
                     // update the HTML
                     document.getElementById(variableName).textContent = variableValue + ' ' + variableUnit;
                     // update RNBO parameters
