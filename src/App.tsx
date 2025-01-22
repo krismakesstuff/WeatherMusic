@@ -22,11 +22,9 @@ const setupRNBO = async () => {
     return device;
   });
 
-
   device.node.connect(context.destination);
 
   context.resume();
-
 }
 
 document.body.addEventListener('mousedown', () => {
