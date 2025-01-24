@@ -1,6 +1,10 @@
-export default function Controls() {
+interface ControlsProps {
+    className: string;
+}
+
+export default function Controls(props: ControlsProps) {
     return (
-        <div className="flex items-center justify-center w-full">
+        <div className={props.className}>
             <div id="controls">
                 <button id="play">Play</button>
                 <button id="stop">Stop</button>

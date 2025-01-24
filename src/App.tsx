@@ -76,18 +76,22 @@ function App() {
 
   return (
     <>
-    <h1>Weather Music</h1>
-    <h3>Listen to music derived from the current weather. Use your location, or search for any location.</h3>
-    <div>
-        <input type="text" id="locationInput" placeholder="Latitude, Longitude"/>
-        <button onClick={() => fetchWeatherData('map')}>Fetch Weather</button>
-        <button onClick={() => fetchWeatherData('user')}>Use Current Location</button>
+    <div className="flex flex-col items-center text-center">
+      <h1 className="text-3xl ">Weather Music</h1>
+      <h3>Listen to music derived from the current weather. Use your location, or search for any location.</h3>
+      <div>
+          <input type="text" id="locationInput" placeholder="Latitude, Longitude"/>
+          <button onClick={() => fetchWeatherData('map')}>Fetch Weather</button>
+          <button onClick={() => fetchWeatherData('user')}>Use Current Location</button>
+      </div>
+      <h2 className="">Weather Info</h2>
     </div>
-    <h2 className="">Weather Info</h2>
-    <Controls />
-    <div id="weatherInfo">
-    </div>
-    <div id="rnbo-device">
+    <div className="flex flex-col">
+      <Controls className="flex items-center justify-center w-full"/>
+      <div id="weatherInfo">
+      </div>
+      <div id="rnbo-device">
+      </div>
     </div>
     </>
   )

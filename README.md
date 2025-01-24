@@ -1,6 +1,6 @@
 # Weather Music
 
-This project is a work in progress. The goal is to make a project that maps 'real-time' weather data to audio parameters that generate music. As the weather changes, so will the music. 
+This project is a work in progress. The goal is to make a project that maps 'real-time' weather data to audio parameters that generate ambient synth music. As the weather changes, so will the music. Click around the map to choose different locations in real-time.
 
 ## How it works
 
@@ -18,6 +18,12 @@ WIP.
 
 The project is React App built with Vite. 
 
+```npm install```
+<br>
+```tailwind init?```
+
+
+currently using [leafletjs](https://leafletjs.com/reference.html) as the map. 
 
 ## Note
 
