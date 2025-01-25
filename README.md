@@ -31,10 +31,7 @@ This project is a work in progress.
 
 ## TODO: 
 - map weather to audio parameters
-- finish building rnbo patch
-- Connnect weather data to rnbo patch
 - add geocoding to add search by name of location functioanlity [geocoding api](https://open-meteo.com/en/docs/geocoding-api)
-- fix google maps integration (look at alternatives [Nasa Whirlwind](https://worldwind.arc.nasa.gov/web/get-started/), [OpenStreetMap](https://wiki.openstreetmap.org/wiki/Use_OpenStreetMap))
 - Add auto-refresh (by minute? or hour? or day?) Open-Meteo has a limit of 10,000 calls per day.
 
 ## Data Mapping
