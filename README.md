@@ -27,7 +27,7 @@ currently using [leafletjs](https://leafletjs.com/reference.html) as the map.
 
 ## Note
 
-This project is a work in progress.  
+This project is a work in progress. The gh-pages deployment is not loading the rnbo device. Need to fix configuration. Working great locally, otherwise.
 
 ## TODO: 
 - map weather to audio parameters

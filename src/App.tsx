@@ -4,7 +4,7 @@ import  Controls  from './Controls.tsx'
 
 
 import { createDevice, IPatcher, Device } from "@rnbo/js";
-const patcherPath: string = "/WeatherMusic/export/rnboWeatherMusic.export.json";
+const patcherPath: string = "/WeatherMusic/src/export/rnboWeatherMusic.export.json";
 let patcher: IPatcher;
 let device: Device;
 const context: AudioContext = new AudioContext();
