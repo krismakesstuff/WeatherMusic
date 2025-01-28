@@ -3,18 +3,21 @@ import './App.css'
 import  Controls  from './Controls.tsx'
 
 
-import { createDevice, IPatcher } from "@rnbo/js";
+import { createDevice, IPatcher, Device } from "@rnbo/js";
 const patcherPath: string = "/WeatherMusic/export/rnboWeatherMusic.export.json";
 let patcher: IPatcher;
-let context: AudioContext;
+let device: Device;
+const context: AudioContext = new AudioContext();
+const gainNode = context.createGain();
+gainNode.gain.value = 0.75; // Set initial gain value
 
-context = new AudioContext();
 
 const setupRNBO = async () => {
 
   patcher = await fetch(patcherPath).then((response) => response.json());
+  console.log("Patcher loaded: ", patcher);
 
-  const device = await createDevice({
+  device = await createDevice({
       patcher: patcher,
       context: context
   }).then((device) => {
@@ -22,7 +25,9 @@ const setupRNBO = async () => {
     return device;
   });
 
-  device.node.connect(context.destination);
+
+  device.node.connect(gainNode);
+  gainNode.connect(context.destination);
 
   context.resume();
 }
@@ -74,6 +79,23 @@ function App() {
   }
 
 
+  function sendRNBOMessage(id: string, value: number) {
+
+    console.log("Sending message to RNBO - ID: " + id + ", Value: " + value);
+
+    if(id === 'output-volume') {
+      console.log("Setting volume to: " + value);
+      gainNode.gain.value = value;
+    } else {
+      if(device){
+        device.parametersById.get(id).value = value;
+      } else {
+        console.log("Device not connected...");
+      }
+    }
+
+  }
+
   return (
     <>
     <div className="flex flex-col items-center text-center">
@@ -87,8 +109,10 @@ function App() {
       <h2 className="">Weather Info</h2>
     </div>
     <div className="flex flex-col">
-      <Controls className="flex items-center justify-center w-full"/>
-      <div id="weatherInfo">
+      <Controls className="flex items-center justify-center w-full"
+        messageCallback={sendRNBOMessage}
+      />
+      <div id="weatherInfo" className="p-4">
       </div>
       <div id="rnbo-device">
       </div>
