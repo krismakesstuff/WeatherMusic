@@ -1,11 +1,10 @@
 # Weather Music
 
-This project is a work in progress. The goal is to make a project that maps 'real-time' weather data to audio parameters that generate ambient synth music. As the weather changes, so will the music. Click around the map to choose different locations in real-time.
+This project is a work in progress and actively being worked. The goal is to map 'real-time' weather data to  parameters that generate ambient synth sounds (music?). As the weather changes, so will the generated sounds. Click around the map to choose locations to get real-time weather data and hear the synth generate new sounds.
 
 ## How it works
 
-You can use your current location or input coordinates to fetch the current weather data. This uses open-meteo, a free open-source weather API. 
-For more information  visit [open-meteo](https://open-meteo.com/). The data is sent to a RNBO device that updates it's setting based off of the given input. Then you hear sounds. see Data Mapping below.
+Use your current location or input coordinates to fetch the current weather data. This uses [open-meteo](https://open-meteo.com/), a free open-source weather API. The weather data is sent to a RNBO device that generates synthesized sound. See Data Mapping below.
 
 ## How to Use
 
@@ -30,7 +29,8 @@ currently using [leafletjs](https://leafletjs.com/reference.html) as the map.
 This project is a work in progress. The gh-pages deployment is not loading the rnbo device. Need to fix configuration. Working great locally, otherwise.
 
 ## TODO: 
-- map weather to audio parameters
+- map remaining weather data to audio parameters
+- finish synths
 - add geocoding to add search by name of location functioanlity [geocoding api](https://open-meteo.com/en/docs/geocoding-api)
 - Add auto-refresh (by minute? or hour? or day?) Open-Meteo has a limit of 10,000 calls per day.
 
