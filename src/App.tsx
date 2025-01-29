@@ -2,6 +2,7 @@
 import './App.css'
 import  Controls  from './Controls.tsx'
 
+// RNBO Init ---------------------------------------------
 
 import { createDevice, IPatcher, Device } from "@rnbo/js";
 const patcherPath: string = "/WeatherMusic/src/export/rnboWeatherMusic.export.json";
@@ -38,6 +39,8 @@ document.body.addEventListener('mousedown', () => {
 
 setupRNBO();
 
+// Leaflet Init ---------------------------------------------
+
 import { map, latLng, tileLayer, MapOptions, imageOverlay, latLngBounds } from "leaflet";
 import 'leaflet/dist/leaflet.css';
 
@@ -66,18 +69,58 @@ imageOverlay(imageUrl, bounds, {
     interactive: true
 }).addTo(mymap);
 
+// OpenMeteo Init ---------------------------------------------
+
+const openMeteoVariables = ['&hourly=','temperature_2m','temperature_80m','dew_point_2m','precipitation_probability','precipitation','rain','snowfall','snow_depth','pressure_msl','surface_pressure','cloud_cover','wind_speed_10m', 'wind_direction_10m','&forecast_days=1'];
+// let map;
+let userLatitude: number;
+let userLongitude: number;
+// const defaultZoom = 4;
+
+async function fetchWeather(lat: string, long: string) {
+  console.log('fetching weather for: ' + lat + ', ' + long);
+  const latitude = 'latitude=' + lat;
+  const longitude = '&longitude=' + long;
+  // build URL
+  const openMeteoAPI = 'https://api.open-meteo.com/v1/forecast?' + latitude + longitude + openMeteoVariables.join(',');
+  // fetch URL
+  fetch(openMeteoAPI)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+
+      
+    })
+}
+
+
+// React App ---------------------------------------------
+
 function App() {
 
-  function fetchWeatherData(id: string) {
-
-    if(id === 'map') {
-      console.log("fetching weather data with id: " + id + ", Location: ");
-    }
-    else if(id === 'user') {
-      console.log("fetching weather data with id: " + id + ", Location: ");
-    }
+  async function fetchWeatherFromUserLocation(){
+    console.log('Fetching weather for user location');
+    navigator.geolocation.getCurrentPosition((position) => {    
+        userLatitude = position.coords.latitude;
+        userLongitude = position.coords.longitude;
+        console.log('User Location, Lat: ' + userLatitude + ', Long: ' + userLongitude);
+        fetchWeather(userLatitude.toString(), userLongitude.toString());
+        //updateMap(userLatitude, userLongitude);
+    });
   }
 
+  function fetchWeatherFromInputLocation() {
+    // const inputLocation = document.getElementById('locationInput').value;
+  
+    // TODO: get input location from user
+  
+    console.log('Input location: ');
+    // let location = inputLocation.replace(/\s/g, '').split(',');
+    // let latitude = location[0];  
+    // let longitude = location[1]; 
+    //fetchWeather(latitude, longitude);
+    //updateMap(latitude, longitude);
+  }
 
   function sendRNBOMessage(id: string, value: number) {
 
@@ -103,8 +146,8 @@ function App() {
       <h3>Listen to music derived from the current weather. Use your location, or search for any location.</h3>
       <div>
           <input type="text" id="locationInput" placeholder="Latitude, Longitude"/>
-          <button onClick={() => fetchWeatherData('map')}>Fetch Weather</button>
-          <button onClick={() => fetchWeatherData('user')}>Use Current Location</button>
+          <button onClick={fetchWeatherFromInputLocation}>Fetch Weather</button>
+          <button onClick={fetchWeatherFromUserLocation}>Use Current Location</button>
       </div>
       <h2 className="">Weather Info</h2>
     </div>
