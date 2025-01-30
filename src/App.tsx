@@ -1,6 +1,8 @@
 
+import React, {useState, useEffect} from 'react'
 import './App.css'
 import  Controls  from './Controls.tsx'
+import  WeatherInfo  from './WeatherInfo.tsx'
 
 // RNBO Init ---------------------------------------------
 
@@ -75,6 +77,7 @@ const openMeteoVariables = ['&hourly=','temperature_2m','temperature_80m','dew_p
 // let map;
 let userLatitude: number;
 let userLongitude: number;
+let currentWeather: any;
 // const defaultZoom = 4;
 
 async function fetchWeather(lat: string, long: string) {
@@ -84,12 +87,11 @@ async function fetchWeather(lat: string, long: string) {
   // build URL
   const openMeteoAPI = 'https://api.open-meteo.com/v1/forecast?' + latitude + longitude + openMeteoVariables.join(',');
   // fetch URL
-  fetch(openMeteoAPI)
+  return fetch(openMeteoAPI)
     .then(response => response.json())
     .then(data => {
       console.log(data)
-
-      
+      return data;
     })
 }
 
@@ -98,13 +100,16 @@ async function fetchWeather(lat: string, long: string) {
 
 function App() {
 
+  
+
   async function fetchWeatherFromUserLocation(){
     console.log('Fetching weather for user location');
     navigator.geolocation.getCurrentPosition((position) => {    
         userLatitude = position.coords.latitude;
         userLongitude = position.coords.longitude;
         console.log('User Location, Lat: ' + userLatitude + ', Long: ' + userLongitude);
-        fetchWeather(userLatitude.toString(), userLongitude.toString());
+        currentWeather = fetchWeather(userLatitude.toString(), userLongitude.toString());
+        
         //updateMap(userLatitude, userLongitude);
     });
   }
@@ -136,7 +141,6 @@ function App() {
         console.log("Device not connected...");
       }
     }
-
   }
 
   return (
@@ -155,8 +159,7 @@ function App() {
       <Controls className="flex items-center justify-center w-full"
         messageCallback={sendRNBOMessage}
       />
-      <div id="weatherInfo" className="p-4">
-      </div>
+      <WeatherInfo updateWeatherInfo={}/>
       <div id="rnbo-device">
       </div>
     </div>
