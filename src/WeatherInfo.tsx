@@ -1,33 +1,60 @@
+export const openMeteoVariables = [
+  "&current=",
+  "temperature_2m",
+  "temperature_80m",
+  "dew_point_2m",
+  "precipitation_probability",
+  "precipitation",
+  "rain",
+  "snowfall",
+  "snow_depth",
+  "pressure_msl",
+  "surface_pressure",
+  "cloud_cover",
+  "wind_speed_10m",
+  "wind_direction_10m",
+];
 
-interface WeatherInfoProps {
-    data: any;
+interface DataPointProps {
+  [id: string]: string | number;
 }
 
-export default function WeatherInfo(props: WeatherInfoProps) {
+function DataPoint(props: DataPointProps) {
+  return (
+    <div className="p-2 m-2 rounded-lg bg-slate-400 ">
+      {props.id}: {props.value}
+    </div>
+  );
+}
 
-    if(props.data) {
+interface WeatherInfoProps {
+  [key: string]: {
+    [key: string]: string | number;
+  };
+}
 
-    const currentTemp = props.data.current.temperature_2m;
-    const tempUnit = props.data.current_units.temperature_2m;
-    const currentRain = props.data.current.rain;
-    const rainUnit = props.data.current_units.rain;
-    const currentHumidity = props.data.current.relative_humidity_2m;
-    const humidityUnit = props.data.current_units.relative_humidity_2m; 
-    const currentWindSpeed = props.data.current.wind_speed_10m;  
+export function WeatherInfo(props: WeatherInfoProps) {
+  if ("current" in props.data) {
+    console.log("Building Weather Info Data: ", props.data);
 
-    return(
-        <>
-        <h2 className="">Weather Info</h2>
-        <p>Temperature: {props.data.current.temperature_2m}°C</p>
+    function renderDataPoints() {
+      return Object.entries(props.data["current"]).map(([id, value]) => {
+        return <DataPoint key={id} id={id} value={value} />;
+      });
+    }
 
-        </>
-    );
-} else {
     return (
-        <div className="">
-            <h2 className="">Weather Info</h2>
-            <p>Temperature: No Data Available</p>
-        </div>
+      <div>
+        Weather Info:
+        <div className="flex flex-wrap justify-center">{renderDataPoints()}</div>
+      </div>
     );
-
+  } else {
+    return (
+      <div className="">
+        <h2 className="">Weather Info</h2>
+        <p>Temperature: No Data Available</p>
+      </div>
+    );
+  }
 }

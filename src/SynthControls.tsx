@@ -1,9 +1,9 @@
-interface ControlsProps {
+interface SynthControlsProps {
     className: string;
     messageCallback: (id: string, value: number) => void;
 }
 
-export default function Controls(props: ControlsProps) {
+export default function SynthControls(props: SynthControlsProps) {
 
     function handlePlayClicked() {
         console.log("Play button clicked");
