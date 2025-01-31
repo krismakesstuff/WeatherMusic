@@ -21,15 +21,18 @@ interface DataPointProps {
 
 function DataPoint(props: DataPointProps) {
   return (
-    <div className="p-2 m-2 rounded-lg bg-slate-400 ">
+    <div className="p-2 m-2 rounded-lg bg-slate-800 ">
       {props.id}: {props.value}
     </div>
   );
 }
 
 interface WeatherInfoProps {
-  [key: string]: {
-    [key: string]: string | number;
+  className: string;
+  data: {
+    [key: string]: {
+      [key: string]: string | number;
+    };
   };
 }
 
@@ -44,16 +47,16 @@ export function WeatherInfo(props: WeatherInfoProps) {
     }
 
     return (
-      <div>
+      <div className={props.className}>
         Weather Info:
         <div className="flex flex-wrap justify-center">{renderDataPoints()}</div>
       </div>
     );
   } else {
     return (
-      <div className="">
+      <div className={props.className}>
         <h2 className="">Weather Info</h2>
-        <p>Temperature: No Data Available</p>
+        <p>No Data Available</p>
       </div>
     );
   }

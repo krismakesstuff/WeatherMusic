@@ -33,13 +33,11 @@ export default function SynthControls(props: SynthControlsProps) {
 
     return (
         <div className={props.className}>
-            <div id="controls">
-                <button id="play" onClick={handlePlayClicked}>Play</button>
-                <button id="stop" onClick={handleStopClicked} >Stop</button>
-                <button id="reset" onClick={handleResetClicked} >Reset</button>
-                <button id="mute"onClick={handleMuteClicked}>Mute</button>
-                <input type="range" id="volume" min="0" max="1" step="0.01" onChange={handleVolumeChanged}/>
-            </div>
+            <button id="play" onClick={handlePlayClicked}>Play</button>
+            <button id="stop" onClick={handleStopClicked} >Stop</button>
+            <button id="reset" onClick={handleResetClicked} >Reset</button>
+            <button id="mute"onClick={handleMuteClicked}>Mute</button>
+            <input type="range" id="volume" min="0" max="1" step="0.01" onChange={handleVolumeChanged}/>
         </div>
     );
 }
