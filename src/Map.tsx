@@ -1,4 +1,6 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { useState } from 'react';
+
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
 import { Icon } from 'leaflet';
 
 import "leaflet/dist/leaflet.css";
@@ -49,8 +51,29 @@ const crosshairIcon = new Icon({
 //   crosshair.setLatLng(theMap.getCenter());
 // });
 
+interface CrosshairMarkerProps {
+  position: [number, number];
+  icon: Icon;
+}
 
+function CrosshairMarker(props: CrosshairMarkerProps) {
+  const [position, setPosition] = useState(props.position);
 
+  const map = useMapEvents({
+    move: () => {
+      setPosition([map.getCenter().lat, map.getCenter().lng]);
+    }
+  });
+
+  return (
+  <Marker position={position} icon={props.icon}>
+    <Popup>
+        Position: {position}
+      </Popup>
+  </Marker>
+  );
+
+}
 
 interface MapProps {
   className: string;
@@ -61,18 +84,13 @@ export default function Map(props: MapProps) {
   
 
 
-
   return(
     <MapContainer className={props.className} center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true}>
     <TileLayer
       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-    <Marker position={[51.505, -0.09]} icon={crosshairIcon}>
-      <Popup>
-        A pretty CSS3 popup. <br /> Easily customizable.
-      </Popup>
-    </Marker>
+    <CrosshairMarker position={[51.505, -0.09]} icon={crosshairIcon}/>
     </MapContainer>
   );
 }

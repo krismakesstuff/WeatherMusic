@@ -69,18 +69,18 @@ function App() {
   const [latLong, setLatLong] = useState<string>('0,0');
 
   useEffect(() => {
-  let ignore = false;
-  const lat: string = latLong.split(",")[0];
-  const long: string = latLong.split(",")[1];
+    let ignore = false;
+    const lat: string = latLong.split(",")[0];
+    const long: string = latLong.split(",")[1];
 
-  if(lat !== '0' && long !== '0'){
-    fetchWeather(lat, long).then((data) => {
-      if (!ignore) {
-        setWeatherData(data);
-      } 
-    });
-  }
-  return () => { ignore = true; };
+    if(lat !== '0' && long !== '0'){
+      fetchWeather(lat, long).then((data) => {
+        if (!ignore) {
+          setWeatherData(data);
+        } 
+      });
+    }
+    return () => { ignore = true; };
   }, [latLong]);
 
   function setLocation(id: string) {
@@ -91,10 +91,10 @@ function App() {
       });
     } else if (id === "map") {
       console.log("Fetching weather for map location");
-      const lat = theMap.getCenter().lat;
-      const long = theMap.getCenter().lng;
-      setLatLong(lat.toString() + "," + long.toString());
-
+      //TODO: fix
+      // const lat = Map.getCenter().lat;
+      // const long = Map.getCenter().lng;
+      // setLatLong(lat.toString() + "," + long.toString());
     }
   }
 
@@ -119,7 +119,7 @@ function App() {
       <div className="md:grid md:grid-cols-2 md:grid-rows-2 md:text-left gap-3 flex flex-col items-center text-center p-4 bg-slate-600">
         <h1 className="text-3xl row-span-1">Weather Music</h1>
         <p className="">
-          Listen to music generated from the current weather. 
+          Listen to music generated from the weather. 
           <br></br>
           Use the map to choose a location or use your own location.
         </p>
