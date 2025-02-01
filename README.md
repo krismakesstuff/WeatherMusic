@@ -26,12 +26,15 @@ currently using [leafletjs](https://leafletjs.com/reference.html) as the map.
 
 ## Note
 
-This project is a work in progress. The gh-pages deployment is not loading the rnbo device. Need to fix configuration. Working great locally, otherwise.
+This project is a work in progress. The gh-pages deployment is not loading the rnbo device currently. Need to fix configuration. Working great locally, otherwise.
 
 ## TODO: 
+- fix gh-pages deployment: not loading rnb0-device. Check gh-pages config
 - map remaining weather data to audio parameters
 - finish synths
+- move rnboDevice into it's own react component?
 - add geocoding to add search by name of location functioanlity [geocoding api](https://open-meteo.com/en/docs/geocoding-api)
+  - add cities list in the meantime
 - Add auto-refresh (by minute? or hour? or day?) Open-Meteo has a limit of 10,000 calls per day.
 
 ## Data Mapping

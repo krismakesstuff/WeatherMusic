@@ -4,6 +4,8 @@ import "./App.css";
 import SynthControls from "./SynthControls.tsx";
 import {WeatherInfo, openMeteoVariables} from "./WeatherInfo.tsx";
 
+import Map from "./Map.tsx";
+
 // RNBO Init ---------------------------------------------
 
 import { createDevice, IPatcher, Device } from "@rnbo/js";
@@ -39,49 +41,6 @@ document.body.addEventListener("mousedown", () => {
 
 setupRNBO();
 
-// Leaflet Init ---------------------------------------------
-
-import {
-  map,
-  latLng,
-  tileLayer,
-  MapOptions,
-  // imageOverlay,
-  // latLngBounds,
-  icon,
-  marker,
-} from "leaflet";
-import "leaflet/dist/leaflet.css";
-
-const options: MapOptions = {
-  center: latLng(40.731253, -73.996139),
-  zoom: 10,
-  minZoom: 2,
-  maxZoom: 14,
-};
-
-const theMap = map("map", options);
-let crosshair: any;
-
-// make crosshair for the map
-const crosshairIcon = icon({
-  iconUrl: crosshairIconPath,
-  iconSize:     [40, 40], // size of the icon
-  iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
-});
-crosshair = marker(theMap.getCenter(), {icon: crosshairIcon, interactive:false});
-// Add the OpenStreetMap tiles
-tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution:
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(theMap);
-// Add the crosshair to the map
-crosshair.addTo(theMap);
-
-// Move the crosshair to the center of the map when the user pans
-theMap.on('move', function(e) {
-  crosshair.setLatLng(theMap.getCenter());
-});
 
 // OpenMeteo Init ---------------------------------------------
 
@@ -156,6 +115,7 @@ function App() {
 
   return (
     <>
+    <div className="flex flex-col h-svh">
       <div className="md:grid md:grid-cols-2 md:grid-rows-2 md:text-left gap-3 flex flex-col items-center text-center p-4 bg-slate-600">
         <h1 className="text-3xl row-span-1">Weather Music</h1>
         <p className="">
@@ -169,7 +129,7 @@ function App() {
             id="locationInput"
             placeholder="Latitude, Longitude"
             value={latLong}
-          />
+            />
           <button onClick={() => setLocation("map")}>
             Fetch Weather
             </button>
@@ -179,13 +139,15 @@ function App() {
         </div>
       </div>
       <WeatherInfo data={weatherData} className={'bg-slate-500 p-4'} />
+      <Map className="flex-auto"/>
       <div className="flex flex-col">
         <SynthControls
-          className="absolute bottom-0 w-full p-4 flex gap-2 items-center justify-center bg-slate-800"
+          className="w-full p-4 flex gap-2 items-center justify-center bg-slate-800"
           messageCallback={sendRNBOMessage}
-        />
+          />
         <div id="rnbo-device"></div>
       </div>
+    </div>
     </>
   );
 }
