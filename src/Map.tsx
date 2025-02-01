@@ -54,6 +54,8 @@ const crosshairIcon = new Icon({
 interface CrosshairMarkerProps {
   position: [number, number];
   icon: Icon;
+  setCurrentPosition: (position: [number, number]) => void;
+  
 }
 
 function CrosshairMarker(props: CrosshairMarkerProps) {
@@ -62,6 +64,7 @@ function CrosshairMarker(props: CrosshairMarkerProps) {
   const map = useMapEvents({
     move: () => {
       setPosition([map.getCenter().lat, map.getCenter().lng]);
+      props.setCurrentPosition([map.getCenter().lat, map.getCenter().lng]);
     }
   });
 
@@ -77,20 +80,27 @@ function CrosshairMarker(props: CrosshairMarkerProps) {
 
 interface MapProps {
   className: string;
+  setCurrentPosition: (position: [number, number]) => void;
 }
 
 
 export default function Map(props: MapProps) {
   
+  
+
 
 
   return(
-    <MapContainer className={props.className} center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true}>
+    <MapContainer className={props.className} 
+      center={[51.505, -0.09]} 
+      zoom={13} 
+      scrollWheelZoom={true}
+    >
     <TileLayer
       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-    <CrosshairMarker position={[51.505, -0.09]} icon={crosshairIcon}/>
+    <CrosshairMarker position={[51.505, -0.09]} icon={crosshairIcon} setCurrentPosition={props.setCurrentPosition}/>
     </MapContainer>
   );
 }

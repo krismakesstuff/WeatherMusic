@@ -44,10 +44,10 @@ setupRNBO();
 
 // OpenMeteo Init ---------------------------------------------
 
-async function fetchWeather(lat: string, long: string) {
-  console.log("fetching weather for: " + lat + ", " + long);
-  const latitude = "latitude=" + lat;
-  const longitude = "&longitude=" + long;
+async function fetchWeather(latLong: [number, number]) {
+  console.log("fetching weather for: " + latLong[0] + ", " + latLong[1]);
+  const latitude = "latitude=" + latLong[0];
+  const longitude = "&longitude=" + latLong[1];
   // build URL
   const openMeteoAPI =
     "https://api.open-meteo.com/v1/forecast?" +
@@ -65,39 +65,49 @@ async function fetchWeather(lat: string, long: string) {
 // React App ---------------------------------------------
 
 function App() {
-  const [weatherData, setWeatherData] = useState<object>({});
-  const [latLong, setLatLong] = useState<string>('0,0');
+  const [weatherData, setWeatherData] = useState<object>({}); // OpenMeteo response
+  const [fetchLatLong, setFetchLatLong] = useState<[number, number]>([0,0]); // Lat, Long for OpenMeteo request
+  const [currentMapCenter, setCurrentMapCenter] = useState<[number, number]>([0,0]);
 
+  // Fetch Weather Data when fetchLatLong changes
   useEffect(() => {
     let ignore = false;
-    const lat: string = latLong.split(",")[0];
-    const long: string = latLong.split(",")[1];
 
-    if(lat !== '0' && long !== '0'){
-      fetchWeather(lat, long).then((data) => {
+    if(fetchLatLong[0] !== 0 && fetchLatLong[1] !== 0){
+      fetchWeather(fetchLatLong).then((data) => {
         if (!ignore) {
           setWeatherData(data);
         } 
       });
     }
     return () => { ignore = true; };
-  }, [latLong]);
+  }, [fetchLatLong]);
 
-  function setLocation(id: string) {
+  // Fetch Location Callback
+  function setFetchLocation(id: string) {
     if (id === "user") {
       console.log("Fetching weather for user location");
+      // Get user location
       navigator.geolocation.getCurrentPosition((position) => {
-        setLatLong(position.coords.latitude.toString() + "," + position.coords.longitude.toString());
+        setFetchLatLong([position.coords.latitude, position.coords.longitude]);
       });
     } else if (id === "map") {
       console.log("Fetching weather for map location");
-      //TODO: fix
-      // const lat = Map.getCenter().lat;
-      // const long = Map.getCenter().lng;
-      // setLatLong(lat.toString() + "," + long.toString());
-    }
+      //Get map location
+      setFetchLatLong(currentMapCenter);
+
+    } 
+    // else if (id === "input") {
+    //   console.log("Fetching weather for input location");
+    //   // Get input location
+    //   const location = document.querySelector("input") as HTMLInputElement;
+    //   const lat: number = parseFloat(location.value.split(",")[0]);
+    //   const long: number = parseFloat(location.value.split(",")[1]); 
+    //   setFetchLatLong([lat, long]);
+    // }
   }
 
+  // RNBO Message Callback
   function sendRNBOMessage(id: string, value: number) {
     console.log("Sending message to RNBO - ID: " + id + ", Value: " + value);
 
@@ -112,6 +122,7 @@ function App() {
       }
     }
   }
+  // 
 
   return (
     <>
@@ -121,25 +132,24 @@ function App() {
         <p className="">
           Listen to music generated from the weather. 
           <br></br>
-          Use the map to choose a location or use your own location.
+          Use the map to choose a location.
         </p>
         <div className="md:col-start-2 md:col-end-3 md:row-span-full md:justify-self-center md:self-center flex gap-2">
           <input
+            className="p-2 rounded-md bg-slate-800"
             type="text"
-            id="locationInput"
-            placeholder="Latitude, Longitude"
-            value={latLong}
+            value={`${currentMapCenter[0].toPrecision(4).toString()}, ${currentMapCenter[1].toPrecision(4).toString()}`}
             />
-          <button onClick={() => setLocation("map")}>
+          <button onClick={() => setFetchLocation("map")}>
             Fetch Weather
             </button>
-          <button onClick={() => setLocation("user")}>
-            Use Current Location
+          <button onClick={() => setFetchLocation("user")}>
+            Current Location
           </button>
         </div>
       </div>
       <WeatherInfo data={weatherData} className={'bg-slate-500 p-4'} />
-      <Map className="flex-auto"/>
+      <Map className="flex-auto" setCurrentPosition={setCurrentMapCenter}/>
       <div className="flex flex-col">
         <SynthControls
           className="w-full p-4 flex gap-2 items-center justify-center bg-slate-800"

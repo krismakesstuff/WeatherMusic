@@ -31,6 +31,7 @@ This project is a work in progress. The gh-pages deployment is not loading the r
 ## TODO: 
 - fix gh-pages deployment: not loading rnb0-device. Check gh-pages config
 - map remaining weather data to audio parameters
+  - look into using weather codes for simplification. 
 - finish synths
 - move rnboDevice into it's own react component?
 - add geocoding to add search by name of location functioanlity [geocoding api](https://open-meteo.com/en/docs/geocoding-api)
@@ -39,6 +40,22 @@ This project is a work in progress. The gh-pages deployment is not loading the r
 
 ## Data Mapping
 The weather data is mapped to RNBO parameters. Inside RNBO are mutliple patches that receive the input values and change the audio.
+
+| Code | Description|
+|-------------------------|---------------|
+| 0 |	Clear sky
+| 1, 2, 3 |	Mainly clear, partly cloudy, and overcast
+| 45, 48 | Fog and depositing rime fog
+| 51, 53, 55 | Drizzle: Light, moderate, and dense intensity
+| 56, 57 | Freezing Drizzle: Light and dense intensity
+| 61, 63, 65 | Rain: Slight, moderate and heavy intensity
+| 66, 67 | Freezing Rain: Light and heavy intensity
+| 71, 73, 75 | Snow fall: Slight, moderate, and heavy intensity
+| 77 | Snow grains
+| 80, 81, 82 | Rain showers: Slight, moderate, and violent
+| 85, 86 | Snow showers slight and heavy
+| 95 *	|Thunderstorm: Slight or moderate
+| 96, 99 * | Thunderstorm with slight and heavy hail
 
 | Weather Types | Data Traits                                                                 |
 |---------------|-----------------------------------------------------------------------------|
@@ -61,6 +78,7 @@ The weather data is mapped to RNBO parameters. Inside RNBO are mutliple patches 
 | Humidity (%)   | tbd
 | Day or Night (1or0) | tbd
 | Surface Pressure (hPa) | tbd
+
 
 ---
 ---
