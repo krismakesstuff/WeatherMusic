@@ -22,7 +22,7 @@ interface DataPointProps {
 
 function DataPoint(props: DataPointProps) {
   return (
-    <div className="p-1 m-1 rounded-md bg-slate-800 ">
+    <div className="p-1 m-1 rounded-md bg-slate-600 ">
       {props.id}: {props.value}
     </div>
   );

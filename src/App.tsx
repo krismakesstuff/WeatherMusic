@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import crosshairIconPath from "./assets/crosshair.png";
 import "./App.css";
 import SynthControls from "./SynthControls.tsx";
 import {WeatherInfo, openMeteoVariables} from "./WeatherInfo.tsx";
@@ -67,7 +66,7 @@ async function fetchWeather(latLong: [number, number]) {
 function App() {
   const [weatherData, setWeatherData] = useState<object>({}); // OpenMeteo response
   const [fetchLatLong, setFetchLatLong] = useState<[number, number]>([0,0]); // Lat, Long for OpenMeteo request
-  const [currentMapCenter, setCurrentMapCenter] = useState<[number, number]>([0,0]);
+  const [currentMapCenter, setCurrentMapCenter] = useState<[number, number]>([0,0]); // Lat, Long for map center
 
   // Fetch Weather Data when fetchLatLong changes
   useEffect(() => {
@@ -124,33 +123,49 @@ function App() {
   }
   // 
 
+  let headerHeight = 16;
+
   return (
     <>
     <div className="flex flex-col h-svh">
-      <div className="md:grid md:grid-cols-2 md:grid-rows-2 md:text-left gap-3 flex flex-col items-center text-center p-4 bg-slate-600">
-        <h1 className="text-3xl row-span-1">Weather Music</h1>
-        <p className="">
+      <div className="gap-3 flex flex-col items-center text-center p-4 bg-slate-800">
+        <h1 className="text-2xl row-span-1 m-0">Weather Music</h1>
+        <p className="text-sm m-0">
           Listen to music generated from the weather. 
           <br></br>
           Use the map to choose a location.
         </p>
-        <div className="md:col-start-2 md:col-end-3 md:row-span-full md:justify-self-center md:self-center flex gap-2">
-          <input
-            className="p-2 rounded-md bg-slate-800"
-            type="text"
-            value={`${currentMapCenter[0].toPrecision(4).toString()}, ${currentMapCenter[1].toPrecision(4).toString()}`}
-            />
-          <button onClick={() => setFetchLocation("map")}>
-            Fetch Weather
-            </button>
-          <button onClick={() => setFetchLocation("user")}>
-            Current Location
-          </button>
-        </div>
       </div>
-      <WeatherInfo data={weatherData} className={'bg-slate-500 p-4'} />
-      <Map className="flex-auto" setCurrentPosition={setCurrentMapCenter}/>
+        <WeatherInfo data={weatherData} className={'bg-slate-500 p-4'} />
+        <Map className="flex-auto" setCurrentPosition={setCurrentMapCenter}/>
       <div className="flex flex-col">
+        <div className="md:col-start-2 md:col-end-3 md:row-span-full md:justify-self-center md:self-center w-full flex items-center gap-2 p-4 bg-slate-500">
+            <p>Lat: </p>
+            <input
+              className="p-2 rounded-md bg-slate-600 w-1/2"
+              type="text"
+              value={`${currentMapCenter[0].toPrecision(4).toString()}`}
+              >
+            </input>
+            <p>Long: </p>
+              <input 
+              className="p-2 rounded-md bg-slate-600 w-1/2" 
+              type="text" 
+              value={`${currentMapCenter[1].toPrecision(4).toString()}`}
+              />
+            <button 
+              className={'w-full h-auto'} 
+              onClick={() => setFetchLocation("map")}
+              >
+              Fetch Weather
+              </button>
+            <button
+              className={'w-full h-auto'} 
+              onClick={() => setFetchLocation("user")}
+              >
+              Current Location
+            </button>
+          </div>
         <SynthControls
           className="w-full p-4 flex gap-2 items-center justify-center bg-slate-800"
           messageCallback={sendRNBOMessage}
