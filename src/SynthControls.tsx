@@ -30,7 +30,6 @@ export default function SynthControls(props: SynthControlsProps) {
         props.messageCallback("output-volume", parseFloat(e.target.value));
     }
 
-
     return (
         <div className={props.className}>
             <button id="play" onClick={handlePlayClicked}>Play</button>

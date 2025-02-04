@@ -121,10 +121,8 @@ function App() {
       }
     }
   }
-  // 
 
-  let headerHeight = 16;
-
+  // App
   return (
     <>
     <div className="flex flex-col h-svh">
