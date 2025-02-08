@@ -142,14 +142,14 @@ function App() {
             <input
               className="p-2 rounded-md bg-slate-600 w-1/2"
               type="text"
-              value={`${currentMapCenter[0].toPrecision(4).toString()}`}
+              value={currentMapCenter[0].toPrecision(4).toString()}
               >
             </input>
             <p>Long: </p>
               <input 
               className="p-2 rounded-md bg-slate-600 w-1/2" 
               type="text" 
-              value={`${currentMapCenter[1].toPrecision(4).toString()}`}
+              value={currentMapCenter[1].toPrecision(4).toString()}
               />
             <button 
               className={'w-full h-auto'} 
