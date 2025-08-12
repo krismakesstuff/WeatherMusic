@@ -73,9 +73,26 @@ function App() {
   const [weatherData, setWeatherData] = useState<{[key: string]: {[key: string]: string | number}}>({}); // OpenMeteo response
   const [weatherError, setWeatherError] = useState<string | null>(null); // Weather fetch error
   const [fetchLatLong, setFetchLatLong] = useState<[number, number]>([0,0]); // Lat, Long for OpenMeteo request
-  const [currentMapCenter, setCurrentMapCenter] = useState<[number, number]>([0,0]); // Lat, Long for map center
+  const [currentMapCenter, setCurrentMapCenter] = useState<[number, number]>([51.505, -0.09]); // Lat, Long for map center
   const [mapCenter, setMapCenter] = useState<[number, number]>([51.505, -0.09]); // Controlled map center
   const [isLoadingWeather, setIsLoadingWeather] = useState<boolean>(false); // Loading state
+  const [lastFetchedPosition, setLastFetchedPosition] = useState<[number, number] | null>(null); // Position for which we have data
+
+  // Check if we have data for the current position
+  const hasDataForCurrentPosition = () => {
+    if (!lastFetchedPosition || Object.keys(weatherData).length === 0) return false;
+
+    const threshold = 0.001; // Same threshold as used in the map
+    const latDiff = Math.abs(lastFetchedPosition[0] - currentMapCenter[0]);
+    const lngDiff = Math.abs(lastFetchedPosition[1] - currentMapCenter[1]);
+
+    return latDiff <= threshold && lngDiff <= threshold;
+  };
+
+  // Fetch weather for default location on page load
+  useEffect(() => {
+    setFetchLatLong([51.505, -0.09]);
+  }, []); // Empty dependency array means this runs once on mount
 
   // Fetch Weather Data when fetchLatLong changes
   useEffect(() => {
@@ -90,9 +107,11 @@ function App() {
           if (result.error) {
             setWeatherError(result.error);
             setWeatherData({});
+            setLastFetchedPosition(null);
           } else if (result.data) {
             setWeatherData(result.data);
             setWeatherError(null);
+            setLastFetchedPosition([...fetchLatLong]); // Store the position we fetched data for
           }
           setIsLoadingWeather(false);
         }
@@ -159,7 +178,7 @@ function App() {
     <div className="flex flex-col h-svh bg-slate-800">
       <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 gap-3 flex flex-col justify-start items-center md:items-start text-center md:text-left p-4">
-        <h1 className="text-2xl m-0">Weather Music</h1>
+        <h1 className="text-2xl font-bold">Weather Music</h1>
         <p className="text-sm m-0 w-full">
           Listen to music generated from the weather.
           <br></br>
@@ -183,6 +202,7 @@ function App() {
           onRetryWeather={retryWeatherFetch}
           currentMapCenter={currentMapCenter}
           onFetchLocation={setFetchLocation}
+          hasDataForCurrentPosition={hasDataForCurrentPosition()}
         />
 
         <div id="rnbo-device"></div>

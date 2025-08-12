@@ -58,7 +58,7 @@ interface WeatherDataItemProps {
 
 function WeatherDataItem({ label, value }: WeatherDataItemProps) {
   return (
-    <li className="flex justify-between items-center py-2 px-3 bg-slate-600 rounded-md">
+    <li className="flex justify-between items-center m-2 py-2 px-3 bg-slate-600 rounded-md">
       <span className="font-medium text-slate-200">{label}:</span>
       <span className="text-white">{value}</span>
     </li>
@@ -85,10 +85,10 @@ export function WeatherInfo(props: WeatherInfoProps) {
   };
 
   const headerContent = (
-    <div className="flex items-center justify-between cursor-pointer" onClick={toggleCollapse}>
-      <h2 className="text-lg font-semibold pr-4">Weather Info</h2>
+    <div className="sticky top-0 flex items-center justify-between cursor-pointer bg-slate-700 border-b-2 border-slate-400" onClick={toggleCollapse}>
+      <h2 className="text-base font-normal p-2 pr-4">Weather Info</h2>
       <button
-        className="text-white hover:text-slate-300 transition-colors p-1"
+        className="text-white hover:text-slate-300 transition-colors p-1 m-2"
         aria-label={isCollapsed ? "Expand weather info" : "Collapse weather info"}
       >
         <svg
@@ -155,7 +155,7 @@ export function WeatherInfo(props: WeatherInfoProps) {
       <div className={props.className}>
         {headerContent}
         {!isCollapsed && (
-          <ul className="space-y-2 mt-3">{renderDataItems()}</ul>
+          <ul className="space-y-2 my-3">{renderDataItems()}</ul>
         )}
       </div>
     );

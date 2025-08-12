@@ -58,17 +58,25 @@ function CrosshairMarker(props: CrosshairMarkerProps) {
   }, [props.position]);
 
   const map = useMapEvents({
+    move: () => {
+      // Update crosshair position during drag (visual only)
+      const center = map.getCenter();
+      const newPosition: [number, number] = [center.lat, center.lng];
+      setPosition(newPosition);
+      // Also notify parent immediately for coordinate display updates
+      props.setCurrentPosition(newPosition);
+    },
     moveend: () => {
       const center = map.getCenter();
       const newPosition: [number, number] = [center.lat, center.lng];
 
-      // Only update if position changed significantly (more than ~100 meters)
+      // Only update parent component if position changed significantly (more than ~100 meters)
       const threshold = 0.001; // Roughly 100 meters
       const latDiff = Math.abs(newPosition[0] - position[0]);
       const lngDiff = Math.abs(newPosition[1] - position[1]);
 
       if (latDiff > threshold || lngDiff > threshold) {
-        setPosition(newPosition);
+        // Ensure parent has the final position
         props.setCurrentPosition(newPosition);
       }
     }
@@ -99,11 +107,31 @@ interface MapProps {
   onRetryWeather: () => void;
   currentMapCenter: [number, number];
   onFetchLocation: (id: string) => void;
+  hasDataForCurrentPosition: boolean;
 }
 
 export default function Map(props: MapProps) {
   const defaultCenter: [number, number] = [51.505, -0.09];
   const mapCenter = props.center || defaultCenter;
+  const [crosshairPosition, setCrosshairPosition] = useState<[number, number]>(mapCenter);
+
+  // Update crosshair position when map center changes
+  useEffect(() => {
+    setCrosshairPosition(mapCenter);
+  }, [mapCenter]);
+
+  const handleCrosshairPositionChange = (position: [number, number]) => {
+    setCrosshairPosition(position);
+    props.setCurrentPosition(position);
+  };
+
+  // Determine coordinate outline color based on fetch status
+  const getCoordinateOutlineColor = () => {
+    if (props.isLoadingWeather) {
+      return 'border-yellow-400'; // Loading state
+    }
+    return props.hasDataForCurrentPosition ? 'border-green-400' : 'border-red-400';
+  };
 
   return(
     <div className={`${props.className} relative`}>
@@ -145,7 +173,7 @@ export default function Map(props: MapProps) {
       </LayersControl>
 
       <MapCenterController center={mapCenter} />
-      <CrosshairMarker position={mapCenter} icon={crosshairIcon} setCurrentPosition={props.setCurrentPosition}/>
+      <CrosshairMarker position={mapCenter} icon={crosshairIcon} setCurrentPosition={handleCrosshairPositionChange}/>
       </MapContainer>
 
       {/* Weather Info Overlay - Left side, avoiding controls */}
@@ -156,21 +184,21 @@ export default function Map(props: MapProps) {
             error={props.weatherError}
             isLoading={props.isLoadingWeather}
             onRetry={props.onRetryWeather}
-            className="bg-slate-800/90 backdrop-blur-sm p-2 md:p-4 shadow-lg text-white text-sm md:text-base max-h-80 md:max-h-96 overflow-y-auto"
+            className="bg-slate-800/90 backdrop-blur-sm shadow-lg text-white text-sm md:text-base max-h-80 md:max-h-96 overflow-y-auto"
           />
         </div>
       </div>
 
       {/* Lat/Long Control Bar - Bottom, mobile-optimized */}
       <div className="absolute bottom-4 left-2 right-2 md:left-1/2 md:right-auto md:-translate-x-1/2 z-[400] pointer-events-none">
-        <div className="bg-slate-800/90 backdrop-blur-sm p-2 md:p-4 rounded-lg shadow-lg border-2 border-gray-300 text-white mx-auto max-w-4xl pointer-events-auto">
+        <div className={`bg-slate-800/90 backdrop-blur-sm p-2 md:p-4 rounded-lg shadow-lg border-2 ${getCoordinateOutlineColor()} text-white mx-auto max-w-4xl pointer-events-auto`}>
           <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-3">
             <div className="flex items-center gap-2 md:gap-4 flex-1 text-xs md:text-sm">
               <span className="font-bold whitespace-nowrap">
-                Lat: <span className="font-mono">{mapCenter[0].toPrecision(6)}</span>
+                Lat: <span className="font-mono">{crosshairPosition[0].toPrecision(6)}</span>
               </span>
               <span className="font-bold whitespace-nowrap">
-                Long: <span className="font-mono">{mapCenter[1].toPrecision(6)}</span>
+                Long: <span className="font-mono">{crosshairPosition[1].toPrecision(6)}</span>
               </span>
             </div>
             <div className="flex gap-1 md:gap-2 w-full sm:w-auto">
