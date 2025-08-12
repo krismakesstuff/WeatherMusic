@@ -1,45 +1,68 @@
 # Weather Music
 
-This project is a work in progress and actively being worked. The goal is to map 'real-time' weather data to  parameters that generate ambient synth sounds (music?). As the weather changes, so will the generated sounds. Click around the map to choose locations to get real-time weather data and hear the synth generate new sounds.
+An interactive web application that transforms real-time weather data into generative ambient music. Explore weather patterns around the world through sound - as the weather changes, so does the music. Use the interactive map to select locations and hear how different weather conditions create unique soundscapes.
+
+#### This project is still in progress. The UI and map are functional, but the synth still needs to be completed.
 
 ## How it works
 
-Use your current location or input coordinates to fetch the current weather data. This uses [open-meteo](https://open-meteo.com/), a free open-source weather API. The weather data is sent to a RNBO device that generates synthesized sound. See Data Mapping below.
+The app fetches real-time weather data from [Open-Meteo](https://open-meteo.com/), a free open-source weather API. Weather parameters are mapped to synthesizer controls in a RNBO device that generates ambient audio in real-time. The map displays both satellite imagery and live precipitation radar data.
+
+## Features
+
+- **Interactive Map**: Click anywhere on the map to fetch weather data for that location
+- **Real-time Weather**: Current weather conditions including temperature, precipitation, wind, and atmospheric pressure
+- **Live Radar**: Precipitation overlay showing real-time rain patterns
+- **Generative Music**: Weather data drives synthesizer parameters for unique ambient soundscapes
+- **Multiple Views**: Switch between satellite and street map views
 
 ## How to Use
 
-1. Enter a location in the input field and click "Fetch Weather" or click "Use Current Location" to get the weather for your current location.
-2. View the weather information displayed on the page.
-3. Listen to the sounds generated from the weather data.
+1. Use the map to navigate to any location worldwide
+2. Click "Fetch Weather" to get current weather data for the map center
+3. Or click "Current Location" to use your GPS coordinates
+4. View detailed weather information in the overlay panel
+5. Listen as the weather data generates unique ambient sounds
+6. Use the audio controls to play/stop and adjust volume
 
-## How to Build
-WIP.
+## Development
 
-The project is React App built with Vite. 
+Built with React, TypeScript, and Vite. Uses Leaflet for mapping and RNBO for audio synthesis.
 
-```npm install```
-<br>
-```tailwind init?```
+### Setup
+```bash
+npm install
+npm run dev
+```
 
+### Build
+```bash
+npm run build
+```
 
-currently using [leafletjs](https://leafletjs.com/reference.html) as the map. 
+### Deploy to GitHub Pages
+```bash
+npm run deploy
+```
 
-## Note
+## Tech Stack
 
-This project is a work in progress. The gh-pages deployment is not loading the rnbo device currently. Need to fix configuration. Working great locally, otherwise.
+- **Frontend**: React 19, TypeScript, Tailwind CSS
+- **Build Tool**: Vite
+- **Mapping**: Leaflet.js with React-Leaflet
+- **Weather API**: Open-Meteo
+- **Audio**: RNBO (Max/MSP export)
+- **Radar Data**: RainViewer API
 
-## TODO: 
-- fix gh-pages deployment: not loading rnb0-device. Check gh-pages config
-- map remaining weather data to audio parameters
-  - look into using weather codes for simplification. 
-- finish synths
-- move rnboDevice into it's own react component?
-- add geocoding to add search by name of location functioanlity [geocoding api](https://open-meteo.com/en/docs/geocoding-api)
-  - add cities list in the meantime
-- Add auto-refresh (by minute? or hour? or day?) Open-Meteo has a limit of 10,000 calls per day.
+## Current Status
 
-## Data Mapping
-The weather data is mapped to RNBO parameters. Inside RNBO are mutliple patches that receive the input values and change the audio.
+The application is functional with core features implemented. Audio synthesis responds to weather parameters in real-time.
+
+## TODO
+
+- Map additional weather parameters to audio synthesis
+- Expand synthesizer patches for different weather types
+- Complete sound design of weather parameters
 
 | Code | Description|
 |-------------------------|---------------|
@@ -74,7 +97,7 @@ The weather data is mapped to RNBO parameters. Inside RNBO are mutliple patches 
 | Rain amount (mm/hr)| RainSynth<br>- Trigger Rate<br>- Frequency<br>- ADSR<br>- Note Length(ms)<br>- OutputGain<br>- Noise Gain
 | Wind Speed (km/h) | tbd
 | Wind Direction (deg)| tbd
-| Temperature (C)  | tbd 
+| Temperature (C)  | tbd
 | Humidity (%)   | tbd
 | Day or Night (1or0) | tbd
 | Surface Pressure (hPa) | tbd
@@ -86,6 +109,6 @@ The weather data is mapped to RNBO parameters. Inside RNBO are mutliple patches 
 | Max Patches | Description
 |-------------|------------|
 | RainSynth   | 4 OSCs: 2 sine, 2 saw, each channel has dedicated saw and sine OSCs. There is noise stage that is applied to both channels equally. After that, a delay and filter. Each "clock input" triggers random numbers for the following parameters:<br>- frequency multiplier for each channel's OSCs.<br>- delay time for ADSR note on.<br>-  left or right channel to trigger note on.
-| HeatSynth  | Need to build. Could be for temperature, humidity, maybe pressure as well? 
+| HeatSynth  | Need to build. Could be for temperature, humidity, maybe pressure as well?
 | WindSynth  | Need to build. Would be for windspeed, and winddirection.
-| EarthTone | Single sine wave at 64hz. 
+| EarthTone | Single sine wave at 64hz.
