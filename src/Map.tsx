@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap, LayersControl, ZoomControl } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap, ZoomControl } from 'react-leaflet'
 import { Icon } from 'leaflet';
 import SimpleRainLayer from './SimpleRainLayer';
+import TemperatureHeatMap from './TemperatureHeatMap';
+import CustomLayerControls, { LayerState } from './CustomLayerControls';
 import { WeatherInfo } from './WeatherInfo';
 
 import "leaflet/dist/leaflet.css";
@@ -115,6 +117,16 @@ export default function Map(props: MapProps) {
   const mapCenter = props.center || defaultCenter;
   const [crosshairPosition, setCrosshairPosition] = useState<[number, number]>(mapCenter);
 
+  // Layer state management
+  const [layerState, setLayerState] = useState<LayerState>({
+    baseLayer: 'satellite',
+    overlays: {
+      cityLabels: true,
+      radar: true,
+      temperatureHeatMap: false
+    }
+  });
+
   // Update crosshair position when map center changes
   useEffect(() => {
     setCrosshairPosition(mapCenter);
@@ -133,6 +145,14 @@ export default function Map(props: MapProps) {
     return props.hasDataForCurrentPosition ? 'border-green-400' : 'border-red-400';
   };
 
+  // Extract current temperature for heat map
+  const getCurrentTemperature = (): number => {
+    if (props.weatherData?.current?.temperature_2m) {
+      return Number(props.weatherData.current.temperature_2m);
+    }
+    return 20; // Default temperature
+  };
+
   return(
     <div className={`${props.className} relative`}>
       <MapContainer
@@ -143,41 +163,59 @@ export default function Map(props: MapProps) {
         zoomControl={false}
       >
       <ZoomControl position="topright" />
-      <LayersControl position="topright">
-        <LayersControl.BaseLayer name="OpenStreetMap">
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-        </LayersControl.BaseLayer>
 
-        <LayersControl.BaseLayer checked name="Satellite">
-          <TileLayer
-            attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          />
-        </LayersControl.BaseLayer>
+      {/* Base Layers */}
+      {layerState.baseLayer === 'osm' && (
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+      )}
 
-        <LayersControl.Overlay name="City Names & Labels" checked={true}>
-          <TileLayer
-            attribution='&copy; <a href="https://carto.com/">CartoDB</a>'
-            url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
-            opacity={0.8}
-            pane="overlayPane"
-          />
-        </LayersControl.Overlay>
+      {layerState.baseLayer === 'satellite' && (
+        <TileLayer
+          attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        />
+      )}
 
-        <LayersControl.Overlay name="Radar" checked={true}>
-          <SimpleRainLayer opacity={0.6} colorScheme={2} />
-        </LayersControl.Overlay>
-      </LayersControl>
+      {/* Overlay Layers */}
+      {layerState.overlays.cityLabels && (
+        <TileLayer
+          attribution='&copy; <a href="https://carto.com/">CartoDB</a>'
+          url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
+          opacity={0.8}
+          pane="overlayPane"
+        />
+      )}
+
+      {layerState.overlays.radar && (
+        <SimpleRainLayer opacity={0.6} colorScheme={2} />
+      )}
+
+      {layerState.overlays.temperatureHeatMap && (
+        <TemperatureHeatMap
+          centerLat={crosshairPosition[0]}
+          centerLng={crosshairPosition[1]}
+          currentTemperature={getCurrentTemperature()}
+        />
+      )}
 
       <MapCenterController center={mapCenter} />
       <CrosshairMarker position={mapCenter} icon={crosshairIcon} setCurrentPosition={handleCrosshairPositionChange}/>
       </MapContainer>
 
+      {/* Custom Layer Controls - Top right, below zoom controls */}
+      <div className="absolute top-3 right-16 z-[400] pointer-events-none">
+        <CustomLayerControls
+          layerState={layerState}
+          onLayerStateChange={setLayerState}
+          className="pointer-events-auto"
+        />
+      </div>
+
       {/* Weather Info Overlay - Left side, avoiding controls */}
-      <div className="absolute left-2 md:left-4 top-4 z-[400] min-w-1/5 max-w-[80%] max-h-80 md:max-h-96 overflow-hidden rounded-lg pointer-events-none">
+      <div className="absolute left-2 md:left-4 top-3 z-[400] min-w-1/5 max-w-[80%] max-h-80 md:max-h-96 overflow-hidden rounded-lg pointer-events-none">
         <div className="pointer-events-auto">
           <WeatherInfo
             data={props.weatherData}

@@ -40,7 +40,17 @@
   margin: 4px 0 !important;
   cursor: pointer !important;
   font-size: 13px !important;
-  color: #333 !important;
+  color: #000000 !important;
+}
+
+.leaflet-bar a {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: #475569 !important;
+  color: #ffffff !important;
 }
 
 
